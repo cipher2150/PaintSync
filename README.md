@@ -74,10 +74,4 @@ To see the real-time sync and collaboration features in action:
 
 ---
 
-## ⏱️ Time Spent
 
-- **Architecture Planning**: ~1 hour (Designing coordinate mapping, double-canvas overlay mechanics, and user-specific undo chronology reconciliation).
-- **Backend Development**: ~1.5 hours (Express + Socket.io event flows, room state managers, and undo/redo stacks).
-- **Frontend Development**: ~3 hours (Canvas rendering engine, smooth Bezier path plotting, gesture event listeners, cursor layers, glassmorphic styling, and stats tracking).
-- **Refactoring & Documentation**: ~1 hour (Writing the README, ARCHITECTURE breakdown, and cleaning types configurations).
-- **Total Time**: **~6.5 hours**
