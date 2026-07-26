@@ -4,7 +4,7 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 import path from 'path';
 import dotenv from 'dotenv';
-import { RoomManager } from './rooms';
+import { RoomManager } from './rooms.js';
 import { User, Stroke, Point } from './types';
 
 dotenv.config();
