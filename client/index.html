@@ -1,15 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Board</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PaintSync - Real-Time Collaborative Canvas</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="A real-time collaborative drawing canvas with smooth paths, shapes, user cursors, and synchronized global undo/redo. No frameworks, pure performance.">
+  
+  <!-- Modern Typography (Inter & Outfit) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome for beautiful icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Local styling -->
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <h1>Welcome to the Board</h1>
 
+  <!-- Main Application Layout -->
+  <div id="app-container" class="hidden">
+    <!-- Top Nav Header -->
+    <header class="glass-panel">
+      <div class="logo">
+        <i class="fa-solid fa-wand-magic-sparkles logo-icon"></i>
+        <h1>PaintSync</h1>
+      </div>
+      
+      <div class="room-indicator">
+        <span class="label">Room:</span>
+        <span id="current-room-name" class="room-badge">lobby</span>
+        <button id="btn-leave-room" title="Switch Room" class="icon-btn small">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </div>
 
-    <script src="main.js"></script>
-    
+      <div class="stats-panel">
+        <div class="stat-item" id="ping-stat">
+          <i class="fa-solid fa-network-wired"></i>
+          <span id="ping-value">-- ms</span>
+        </div>
+        <div class="stat-item" id="fps-stat">
+          <i class="fa-solid fa-gauge-high"></i>
+          <span id="fps-value">60 FPS</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <!-- Left Toolbar Sidebar -->
+      <aside class="left-sidebar glass-panel">
+        <div class="sidebar-section">
+          <h3>Tools</h3>
+          <div class="tools-grid">
+            <button id="tool-brush" class="tool-btn active" title="Brush (B)">
+              <i class="fa-solid fa-paint-brush"></i>
+            </button>
+            <button id="tool-eraser" class="tool-btn" title="Eraser (E)">
+              <i class="fa-solid fa-eraser"></i>
+            </button>
+            <button id="tool-line" class="tool-btn" title="Line (L)">
+              <i class="fa-solid fa-minus"></i>
+            </button>
+            <button id="tool-rectangle" class="tool-btn" title="Rectangle (R)">
+              <i class="fa-regular fa-square"></i>
+            </button>
+            <button id="tool-circle" class="tool-btn" title="Circle (C)">
+              <i class="fa-regular fa-circle"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <h3>Brush Size</h3>
+          <div class="brush-size-control">
+            <input type="range" id="brush-size" min="1" max="50" value="5">
+            <span id="brush-size-preview">5px</span>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <h3>Colors</h3>
+          <div class="color-palette">
+            <button class="color-swatch active" style="background-color: #ff5e57;" data-color="#ff5e57"></button>
+            <button class="color-swatch" style="background-color: #ffc048;" data-color="#ffc048"></button>
+            <button class="color-swatch" style="background-color: #1dd1a1;" data-color="#1dd1a1"></button>
+            <button class="color-swatch" style="background-color: #48dbfb;" data-color="#48dbfb"></button>
+            <button class="color-swatch" style="background-color: #5f27cd;" data-color="#5f27cd"></button>
+            <button class="color-swatch" style="background-color: #ff9ff3;" data-color="#ff9ff3"></button>
+            <button class="color-swatch" style="background-color: #ffffff;" data-color="#ffffff"></button>
+            <button class="color-swatch" style="background-color: #2f3542;" data-color="#2f3542"></button>
+          </div>
+          <div class="custom-color-picker">
+            <label for="color-picker-input">
+              <i class="fa-solid fa-eye-dropper"></i> Custom Color
+            </label>
+            <input type="color" id="color-picker-input" value="#ff5e57">
+          </div>
+        </div>
+
+        <div class="sidebar-section actions-section">
+          <h3>Canvas Operations</h3>
+          <div class="actions-grid">
+            <button id="btn-undo" class="action-btn" title="Undo (Ctrl+Z)">
+              <i class="fa-solid fa-rotate-left"></i> Undo
+            </button>
+            <button id="btn-redo" class="action-btn" title="Redo (Ctrl+Y)">
+              <i class="fa-solid fa-rotate-right"></i> Redo
+            </button>
+            <button id="btn-clear" class="action-btn danger" title="Clear Canvas">
+              <i class="fa-solid fa-trash-can"></i> Clear
+            </button>
+            <button id="btn-export" class="action-btn success" title="Export as PNG">
+              <i class="fa-solid fa-file-arrow-down"></i> Export
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Drawing Canvas Area -->
+      <main class="canvas-container" id="canvas-container">
+        <!-- Main Committed Canvas -->
+        <canvas id="committed-canvas" width="2000" height="2000"></canvas>
+        
+        <!-- Live Drawing Active Overlay Canvas -->
+        <canvas id="active-canvas" width="2000" height="2000"></canvas>
+        
+        <!-- Cursors container -->
+        <div id="cursor-layer"></div>
+      </main>
+
+      <!-- Right Collaborative Sidebar -->
+      <aside class="right-sidebar glass-panel">
+        <div class="sidebar-section flex-grow">
+          <h3>Collaborators</h3>
+          <ul id="users-list" class="users-list">
+            <!-- Dynamically populated -->
+          </ul>
+        </div>
+        
+        <div class="sidebar-section system-info">
+          <h3>System Status</h3>
+          <div class="info-row">
+            <span class="info-label">WebSocket:</span>
+            <span id="socket-status" class="status-badge disconnected">Disconnected</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Entry Modal (Select Username & Room) -->
+  <div id="join-modal" class="modal-overlay">
+    <div class="modal-card glass-panel animate-pop-in">
+      <div class="modal-header">
+        <i class="fa-solid fa-wand-magic-sparkles modal-logo-icon"></i>
+        <h2>Welcome to PaintSync</h2>
+        <p>A real-time collaborative workspace. Join a room to start drawing together!</p>
+      </div>
+      
+      <form id="join-form">
+        <div class="input-group">
+          <label for="username-input">Your Display Name</label>
+          <input type="text" id="username-input" placeholder="e.g. Leonardo" required maxlength="16">
+        </div>
+        
+        <div class="input-group">
+          <label for="room-input">Room Code</label>
+          <input type="text" id="room-input" value="lobby" placeholder="e.g. lobby or design-team" required maxlength="20">
+        </div>
+
+        <div class="input-group">
+          <label>Choose Cursor Color</label>
+          <div class="modal-colors">
+            <!-- Populated via script or styling -->
+            <button type="button" class="modal-color-swatch active" style="background-color: #ff5e57;" data-color="#ff5e57"></button>
+            <button type="button" class="modal-color-swatch" style="background-color: #ffc048;" data-color="#ffc048"></button>
+            <button type="button" class="modal-color-swatch" style="background-color: #1dd1a1;" data-color="#1dd1a1"></button>
+            <button type="button" class="modal-color-swatch" style="background-color: #48dbfb;" data-color="#48dbfb"></button>
+            <button type="button" class="modal-color-swatch" style="background-color: #5f27cd;" data-color="#5f27cd"></button>
+            <button type="button" class="modal-color-swatch" style="background-color: #ff9ff3;" data-color="#ff9ff3"></button>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">
+          Enter Canvas Room <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Script Module Initialization -->
+  <script type="module" src="/main.ts"></script>
 </body>
 </html>
