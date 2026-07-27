@@ -20,7 +20,7 @@ export class CanvasManager {
   // Active toolbar options
   private currentColor = '#ff5e57';
   private currentWidth = 5;
-  private currentTool: 'brush' | 'eraser' | 'line' | 'rectangle' | 'circle' = 'brush';
+  private currentTool: 'brush' | 'eraser' | 'line' | 'rectangle' | 'circle' | 'text' | 'triangle' = 'brush';
 
   // Render variables
   private committedStrokes: Stroke[] = [];
@@ -81,7 +81,13 @@ export class CanvasManager {
       const pt = this.getVirtualCoordinates(e);
       this.isDrawing = true;
       this.currentStrokeId = crypto.randomUUID();
-      this.currentPoints = [pt];
+      
+      // For shapes, pre-allocate 2-point array; for brush, start with 1
+      if (this.currentTool === 'brush' || this.currentTool === 'eraser') {
+        this.currentPoints = [pt];
+      } else {
+        this.currentPoints = [pt, pt]; // Initialize with start point copied
+      }
 
       const strokeData = {
         id: this.currentStrokeId,
@@ -358,6 +364,39 @@ export class CanvasManager {
           );
           ctx.arc(pts[0].x, pts[0].y, radius, 0, 2 * Math.PI);
           ctx.stroke();
+        }
+        break;
+      case 'triangle':
+        if (pts.length >= 2) {
+          ctx.beginPath();
+          const dx = pts[1].x - pts[0].x;
+          const dy = pts[1].y - pts[0].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const angle = Math.atan2(dy, dx);
+          
+          // Draw equilateral triangle with one vertex at start point
+          //const height = dist * Math.sqrt(3) / 2;
+          const p1x = pts[0].x;
+          const p1y = pts[0].y;
+          const p2x = pts[0].x + dist * Math.cos(angle + Math.PI / 3);
+          const p2y = pts[0].y + dist * Math.sin(angle + Math.PI / 3);
+          const p3x = pts[0].x + dist * Math.cos(angle - Math.PI / 3);
+          const p3y = pts[0].y + dist * Math.sin(angle - Math.PI / 3);
+          
+          ctx.moveTo(p1x, p1y);
+          ctx.lineTo(p2x, p2y);
+          ctx.lineTo(p3x, p3y);
+          ctx.closePath();
+          ctx.stroke();
+        }
+        break;
+      case 'text':
+        if (pts.length >= 1) {
+          ctx.font = `${Math.max(stroke.width * 3, 16)}px Arial`;
+          ctx.fillStyle = stroke.color;
+          ctx.textAlign = 'left';
+          ctx.textBaseline = 'top';
+          ctx.fillText('Text', pts[0].x, pts[0].y);
         }
         break;
     }

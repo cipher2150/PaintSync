@@ -112,6 +112,7 @@ header .logo {
 header .logo-icon {
   font-size: 24px;
   background: linear-gradient(135deg, #70a1ff, #5352ed);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 2px 8px var(--primary-glow));
@@ -120,6 +121,7 @@ header .logo-icon {
 header h1 {
   font-size: 22px;
   background: linear-gradient(to right, #ffffff, #a4b0be);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -566,6 +568,7 @@ canvas {
 .modal-logo-icon {
   font-size: 40px;
   background: linear-gradient(135deg, #70a1ff, #5352ed);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 4px 12px var(--primary-glow));

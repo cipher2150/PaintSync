@@ -1,4 +1,4 @@
-export interface Point {
+ export interface Point {
   x: number;
   y: number;
 }
@@ -9,7 +9,7 @@ export interface Stroke {
   username: string;
   color: string;
   width: number;
-  tool: 'brush' | 'eraser' | 'line' | 'rectangle' | 'circle';
+  tool: 'brush' | 'eraser' | 'line' | 'rectangle' | 'circle' | 'triangle' | 'text';
   points: Point[];
   isEraser: boolean;
   isActive: boolean;
