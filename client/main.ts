@@ -1,6 +1,6 @@
 import { CanvasManager } from './canvas';
 import { WebSocketClient } from './websocket';
-import { User, Stroke } from '../server/types';
+import { User } from '../server/types';
 
 class AppController {
   private canvasManager: CanvasManager;
@@ -22,6 +22,8 @@ class AppController {
   private toolLine = document.getElementById('tool-line') as HTMLButtonElement;
   private toolRectangle = document.getElementById('tool-rectangle') as HTMLButtonElement;
   private toolCircle = document.getElementById('tool-circle') as HTMLButtonElement;
+  private toolTriangle = document.getElementById('tool-triangle') as HTMLButtonElement; //triangle tool
+  private toolText = document.getElementById('tool-text') as HTMLButtonElement; // text tool.
 
   private brushSize = document.getElementById('brush-size') as HTMLInputElement;
   private brushSizePreview = document.getElementById('brush-size-preview') as HTMLSpanElement;
@@ -99,7 +101,9 @@ class AppController {
       { btn: this.toolEraser, tool: 'eraser' },
       { btn: this.toolLine, tool: 'line' },
       { btn: this.toolRectangle, tool: 'rectangle' },
-      { btn: this.toolCircle, tool: 'circle' }
+      { btn: this.toolCircle, tool: 'circle' },
+      { btn: this.toolTriangle, tool: 'triangle' },
+      { btn: this.toolText, tool: 'text' }
     ] as const;
 
     tools.forEach(({ btn, tool }) => {
@@ -199,6 +203,12 @@ class AppController {
             break;
           case 'c':
             this.toolCircle.click();
+            break;
+          case 't':
+            this.toolTriangle.click();
+            break;
+          case 'x':
+            this.toolText.click();
             break;
         }
       }
