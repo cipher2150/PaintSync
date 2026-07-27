@@ -18,6 +18,8 @@ PaintSync is a real-time collaborative whiteboarding and drawing application des
   - `L` for Line Tool
   - `R` for Rectangle Tool
   - `C` for Circle Tool
+  - `T` for Triangle Tool
+  - `X` for Text Tool
   - `Ctrl + Z` / `Cmd + Z` for Undo
   - `Ctrl + Y` / `Cmd + Y` for Redo
 
