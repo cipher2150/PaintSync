@@ -1,8 +1,8 @@
-# PaintSync - Real-Time Collaborative Canvas
+# PaintSync - RealTime Collaborative Canvas
 
-PaintSync is a real-time collaborative whiteboarding and drawing application designed to support simultaneous multi-user interactions. Users can draw with customizable brushes, erase elements, construct shapes (lines, rectangles, circles), track other users' dynamic cursors in real time, join dedicated rooms, and trigger individual undo/redo cycles globally without disrupting concurrent collaborators.
+PaintSync is a realtime collaborative whiteboarding and drawing application designed to support simultaneous multi user interactions. Users can draw with customizable brushes, erase elements, construct shapes (lines, rectangles, circles), track other users' dynamic cursors in real time, join dedicated rooms, and trigger individual undo/redo cycles globally without disrupting concurrent collaborators.
 
-## 🚀 Features
+## Features
 
 - **Multi-user Real-Time Synchronization**: Connect multiple tabs/devices, see drawing additions immediately as they occur (path streaming at 60 FPS).
 - **Double-Canvas Architecture**: Built with a double-layered Canvas (a persistent committed layer and a dynamic scratchpad layer) to isolate active paths and scale up frame rates.
@@ -25,10 +25,7 @@ PaintSync is a real-time collaborative whiteboarding and drawing application des
 
 ---
 
-## 🛠️ Installation & Setup
-
-Ensure you have [Node.js](https://nodejs.org/) installed (v18+ recommended).
-
+## Installation & Setup
 1. Clone or download this repository to your computer.
 2. Navigate to the project root directory:
    ```bash
@@ -44,7 +41,7 @@ Ensure you have [Node.js](https://nodejs.org/) installed (v18+ recommended).
    ```
 5. Open your browser to: [http://localhost:3000](http://localhost:3000)
 
-### 🧑‍💻 Development Mode
+### Development Mode
 
 If you'd like to make edits or inspect logs, you can run the hot-reloading development servers:
 ```bash
@@ -54,11 +51,11 @@ This runs the TypeScript Express server (port `3000`) and the Vite bundler (port
 
 ---
 
-## 👥 How to Test Multi-User Behavior
+## How to Test Multi-User Behavior
 
 To see the real-time sync and collaboration features in action:
 1. Open [http://localhost:3000](http://localhost:3000) in your primary browser.
-2. Enter a username (e.g., `Alice`), select a room code (e.g. `design`), choose a cursor color, and click **Enter Canvas Room**.
+2. Enter a username (e.g., `Raj`), select a room code (e.g. `design`), choose a cursor color, and click **Enter Canvas Room**.
 3. Open a **new Incognito/Private window** (or a different browser like Safari or Firefox) and navigate to the same URL: [http://localhost:3000](http://localhost:3000).
 4. Enter a different username (e.g., `Bob`), enter the *same* room code (`design`), choose a different cursor color, and click **Enter Canvas Room**.
 5. Arrange the browser windows side-by-side:
@@ -68,7 +65,7 @@ To see the real-time sync and collaboration features in action:
 
 ---
 
-## 🛡️ Known Limitations / Assumptions
+## Limitations / Assumptions
 
 - **Canvas Dimensions**: The virtual canvas is locked to $2000 \times 2000$ pixels. While CSS scales the canvas bounding boxes to fit browser layout viewports, drawing strokes will stretch if aspect ratios diverge significantly (a 1:1 square canvas container is enforced in CSS to prevent distortion).
 - **Persistent Data Storage**: Drawing histories are currently retained in the server's Node.js memory. Restarting the server resets the canvas rooms. (Can be scaled to load/persist to databases in the future).
