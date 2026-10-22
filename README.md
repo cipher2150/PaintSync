@@ -2,6 +2,8 @@
 
 PaintSync is a realtime collaborative whiteboarding and drawing application designed to support simultaneous multi user interactions. Users can draw with customizable brushes, erase elements, construct shapes (lines, rectangles, circles), track other users' dynamic cursors in real time, join dedicated rooms, and trigger individual undo/redo cycles globally without disrupting concurrent collaborators.
 
+LIVE LINK:  https://paintsync-dzsb.onrender.com/
+
 ## Features
 
 - **Multi-user Real-Time Synchronization**: Connect multiple tabs/devices, see drawing additions immediately as they occur (path streaming at 60 FPS).
